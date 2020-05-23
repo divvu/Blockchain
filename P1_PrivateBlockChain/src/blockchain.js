@@ -118,7 +118,7 @@ class Blockchain {
             if (message.split(':').length === 3) {
                 let timestamp = parseInt(message.split(':')[1])
                 let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
-                if (currentTime - timestamp <= 30) {
+                if (currentTime - timestamp <= 300) {
                     let isValid = bitcoinMessage.verify(message, address, signature);
                     if (isValid) {
                         const block = await self._addBlock(new BlockClass.Block({
@@ -132,7 +132,7 @@ class Blockchain {
                     }
                     resolve(null)
                 }
-                resolve(null)
+                resolve("Timeout")
             }
             resolve(null)
         });
@@ -186,7 +186,7 @@ class Blockchain {
             for (const block of self.chain) {
                 const blockData = await block.getBData();
                 if (blockData && blockData.owner === address) {
-                    stars.push(blockData)
+                    stars.push(blockData.star)
                 }
             }
             resolve(stars)
