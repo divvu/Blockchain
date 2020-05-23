@@ -39,20 +39,21 @@ class Block {
         let self = this;
         return new Promise((resolve, reject) => {
             // Save in auxiliary variable the current block hash
-            const blockHash = self.hash;
-            self.hash = null           
+            let auxBlock = self;
+            const auxBlockHash = auxBlock.hash;
+            auxBlock.hash = null;           
 
             // Recalculate the hash of the Block
-            const validBlockHash = SHA256(JSON.stringify(self)).toString();
-            self.hash = validBlockHash
+            let validBlockHash = SHA256(JSON.stringify(auxBlock)).toString();
+            auxBlock.hash = validBlockHash
 
             // Comparing if the hashes changed
-            if (blockHash === validBlockHash) {
+            if (auxBlockHash === validBlockHash) {
                 // Returning the Block is valid
                 resolve(true);
             } else {
                 // Returning the Block is not valid
-                resolve(false)
+                resolve("Tampered block");
             }
 
         });
